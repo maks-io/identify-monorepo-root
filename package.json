@@ -1,0 +1,49 @@
+{
+  "name": "identify-monorepo-root",
+  "version": "1.0.0",
+  "description": "Find the root directory of any given monorepo (works with npm, yarn, pnpm, turbo, etc.)",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "clear-build-folder": "rm -rf ./build",
+    "transpile": "tsc",
+    "fix-paths": "tsc-alias",
+    "build": "yarn clear-build-folder && yarn transpile && yarn fix-paths",
+    "dev": "yarn nodemon",
+    "test": "jest"
+  },
+  "keywords": [
+    "monorepo",
+    "mono repo",
+    "npm",
+    "yarn",
+    "pnpm",
+    "workspaces",
+    "turborepo",
+    "turbo"
+  ],
+  "files": [
+    "build"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maks-io/identify-monorepo-root.git"
+  },
+  "author": "Markus Kurzmann <markus@kurzmann.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/maks-io/identify-monorepo-root/issues"
+  },
+  "homepage": "https://github.com/maks-io/identify-monorepo-root#readme",
+  "dependencies": {
+    "who-am-i-now": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.10",
+    "nodemon": "^2.0.22",
+    "prettier": "^2.8.7",
+    "tsc": "^2.0.4",
+    "tsc-alias": "^1.8.4",
+    "typescript": "^5.0.2"
+  }
+}
