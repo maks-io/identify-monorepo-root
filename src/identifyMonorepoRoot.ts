@@ -24,7 +24,8 @@ export const identifyMonorepoRoot = (): string | null => {
 
     // check for package manager lock files:
     const lockFile = files.find(
-      (f) => f === "pnpm-lock.yaml" || f === "yarn.lock" || "package-lock.json"
+      (f) =>
+        f === "pnpm-lock.yaml" || f === "yarn.lock" || f === "package-lock.json"
     );
     if (lockFile) {
       return "true";
