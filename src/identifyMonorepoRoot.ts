@@ -1,5 +1,5 @@
 import * as path from "path";
-import whoAmINow from "who-am-i-now";
+import { whoAmINow } from "who-am-i-now";
 
 type Trilean = "true" | "false" | "maybe";
 

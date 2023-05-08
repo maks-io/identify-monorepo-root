@@ -1,14 +1,18 @@
 {
   "name": "identify-monorepo-root",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Find the root directory of any given monorepo (works with npm, yarn, pnpm, turbo, etc.)",
   "main": "build/index.js",
   "types": "build/index.d.ts",
+  "bin": {
+    "identify-monorepo-root": "build/cli.js"
+  },
   "scripts": {
     "clear-build-folder": "rm -rf ./build",
     "transpile": "tsc",
     "fix-paths": "tsc-alias",
-    "build": "yarn clear-build-folder && yarn transpile && yarn fix-paths",
+    "make-cli-executable": "chmod +x ./build/cli.js",
+    "build": "yarn clear-build-folder && yarn transpile && yarn fix-paths && yarn make-cli-executable",
     "dev": "yarn nodemon",
     "test": "jest"
   },
@@ -20,7 +24,9 @@
     "pnpm",
     "workspaces",
     "turborepo",
-    "turbo"
+    "turbo",
+    "cli",
+    "command line"
   ],
   "files": [
     "build"
@@ -36,14 +42,15 @@
   },
   "homepage": "https://github.com/maks-io/identify-monorepo-root#readme",
   "dependencies": {
-    "who-am-i-now": "^1.0.4"
+    "minimist": "^1.2.8",
+    "who-am-i-now": "^1.0.5"
   },
   "devDependencies": {
-    "@types/node": "^18.15.10",
+    "@types/node": "^20.1.1",
     "nodemon": "^2.0.22",
-    "prettier": "^2.8.7",
+    "prettier": "^2.8.8",
     "tsc": "^2.0.4",
-    "tsc-alias": "^1.8.4",
-    "typescript": "^5.0.2"
+    "tsc-alias": "^1.8.6",
+    "typescript": "^5.0.4"
   }
 }
