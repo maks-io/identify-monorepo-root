@@ -51,7 +51,6 @@ export const identifyMonorepoRoot = (): string | null => {
   let lastPossibleRootDir: string;
   let currentDir = process.cwd() || __dirname;
   while (true) {
-    currentDir = path.resolve(currentDir, "..");
     isRoot = isDirRoot(currentDir);
     if (isRoot === "maybe") {
       lastPossibleRootDir = currentDir;
@@ -61,6 +60,7 @@ export const identifyMonorepoRoot = (): string | null => {
     if (currentDir === "/") {
       break;
     }
+    currentDir = path.resolve(currentDir, "..");
   }
 
   if (isRoot === "true") {

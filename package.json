@@ -1,6 +1,6 @@
 {
   "name": "identify-monorepo-root",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Find the root directory of any given monorepo (works with npm, yarn, pnpm, turbo, etc.)",
   "main": "build/index.js",
   "types": "build/index.d.ts",
