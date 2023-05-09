@@ -49,7 +49,7 @@ export const identifyMonorepoRoot = (): string | null => {
 
   let isRoot: Trilean = "false";
   let lastPossibleRootDir: string;
-  let currentDir = __dirname;
+  let currentDir = process.cwd() || __dirname;
   while (true) {
     currentDir = path.resolve(currentDir, "..");
     isRoot = isDirRoot(currentDir);
