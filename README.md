@@ -12,7 +12,7 @@ Can be used as command line / cli tool, or as classical dependency.
 Via npm:
 
 ```bash
-npm i -g google-sheets-data-fetcher
+npm i -g identify-monorepo-root
 ```
 
 Via yarn:
