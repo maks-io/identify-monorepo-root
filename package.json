@@ -1,6 +1,6 @@
 {
   "name": "identify-monorepo-root",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Find the root directory of any given monorepo (works with npm, yarn, pnpm, turbo, etc.)",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -43,14 +43,14 @@
   "homepage": "https://github.com/maks-io/identify-monorepo-root#readme",
   "dependencies": {
     "minimist": "^1.2.8",
-    "who-am-i-now": "^1.0.5"
+    "who-am-i-now": "^1.0.7"
   },
   "devDependencies": {
-    "@types/node": "^20.1.1",
+    "@types/node": "^20.3.1",
     "nodemon": "^2.0.22",
     "prettier": "^2.8.8",
     "tsc": "^2.0.4",
     "tsc-alias": "^1.8.6",
-    "typescript": "^5.0.4"
+    "typescript": "^5.1.3"
   }
 }
