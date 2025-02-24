@@ -46,11 +46,14 @@
     "who-am-i-now": "^2.1.1"
   },
   "devDependencies": {
-    "@types/node": "^22.10.1",
-    "nodemon": "^3.1.7",
-    "prettier": "^3.4.1",
-    "tsc": "^2.0.4",
-    "tsc-alias": "^1.8.10",
-    "typescript": "^5.7.2"
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.13.5",
+    "jest": "^29.7.0",
+    "memfs": "^4.17.0",
+    "nodemon": "^3.1.9",
+    "prettier": "^3.5.2",
+    "ts-jest": "^29.2.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
   }
 }
