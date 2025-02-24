@@ -19,8 +19,48 @@ export const identifyMonorepoRoot = (): string | null => {
     // do nothing
   }
 
-  const isDirRoot = (currentDir: string): Trilean => {
+  const isMonorepoRootDir = (currentDir: string): Trilean => {
     const files = fs.readdirSync(currentDir);
+
+    // check for a package.json file with certain properties:
+    const packageJsonFile = files.find((f) => f === "package.json");
+    if (packageJsonFile) {
+      const packageJsonContent = fs.readFileSync(
+        path.resolve(currentDir, "package.json"),
+        "utf-8"
+      );
+      const packageJson = JSON.parse(packageJsonContent);
+
+      if (
+        Array.isArray(packageJson.workspaces) ||
+        Array.isArray(packageJson.workspaces?.packages) ||
+        packageJson.packageManager
+      ) {
+        return "true";
+      }
+
+      return "maybe";
+    }
+
+    // check for existence of pnpm-workspace.yaml file:
+    const pnpmWorkspaceFile = files.find((f) => f === "pnpm-workspace.yaml");
+    if (pnpmWorkspaceFile) {
+      return "true";
+    }
+
+    // check for a lerna.json file with certain properties:
+    const lernaJsonFile = files.find((f) => f === "lerna.json");
+    if (lernaJsonFile) {
+      const lernaJsonContent = fs.readFileSync(
+        path.resolve(currentDir, "lerna.json"),
+        "utf-8"
+      );
+      const lernaJson = JSON.parse(lernaJsonContent);
+
+      if (Array.isArray(lernaJson.packages)) {
+        return "true";
+      }
+    }
 
     // check for package manager lock files:
     const lockFile = files.find(
@@ -31,43 +71,29 @@ export const identifyMonorepoRoot = (): string | null => {
       return "true";
     }
 
-    // check for a package.json file with certain properties:
-    const packageJson = files.find((f) => f === "package.json");
-    if (packageJson) {
-      const packageJsonFile = fs.readFileSync(
-        path.resolve(currentDir, "package.json"),
-        "utf-8"
-      );
-      if (packageJsonFile.packageManager) {
-        return "true";
-      }
-      return "maybe";
-    }
-
     return "false";
   };
 
   let isRoot: Trilean = "false";
-  let lastPossibleRootDir: string;
+  let lastPossibleRootDir: string | null = null;
   let currentDir = process.cwd() || __dirname;
+
   while (true) {
-    isRoot = isDirRoot(currentDir);
+    isRoot = isMonorepoRootDir(currentDir);
+
     if (isRoot === "maybe") {
       lastPossibleRootDir = currentDir;
     } else if (isRoot === "true") {
-      break;
+      return currentDir;
     }
-    if (currentDir === "/") {
-      break;
+
+    const parentDir = path.dirname(currentDir);
+    if (parentDir === currentDir) {
+      break; // stop at root directory
     }
-    currentDir = path.resolve(currentDir, "..");
+
+    currentDir = parentDir;
   }
 
-  if (isRoot === "true") {
-    return currentDir;
-  } else if (lastPossibleRootDir) {
-    return lastPossibleRootDir;
-  } else {
-    return null;
-  }
+  return lastPossibleRootDir;
 };
