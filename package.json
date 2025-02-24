@@ -8,6 +8,7 @@
     "identify-monorepo-root": "build/cli.js"
   },
   "scripts": {
+    "format": "prettier --write **/*.ts",
     "clear-build-folder": "rm -rf ./build",
     "transpile": "tsc",
     "fix-paths": "tsc-alias",

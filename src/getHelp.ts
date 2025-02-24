@@ -11,7 +11,8 @@ export const getHelp = (inclHeader = false) => {
   help += "identify-monorepo-root\n";
 
   help += "\n";
-  help += "(you may run this command anywhere inside your given repo - you don't have to be in its root directory, otherwise this would defeat this library's purpose :)";
+  help +=
+    "(you may run this command anywhere inside your given repo - you don't have to be in its root directory, otherwise this would defeat this library's purpose :)";
 
   return help;
 };
