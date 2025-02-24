@@ -56,5 +56,5 @@ yarn add identify-monorepo-root
 ```Typescript
 import { identifyMonorepoRoot } from "identify-monorepo-root";
 
-const monorepoRoot: string = identifyMonorepoRoot();
+const monorepoRoot: string | null = identifyMonorepoRoot();
 ```

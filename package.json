@@ -11,9 +11,8 @@
     "format": "prettier --write **/*.ts",
     "clear-build-folder": "rm -rf ./build",
     "transpile": "tsc",
-    "fix-paths": "tsc-alias",
     "make-cli-executable": "chmod +x ./build/cli.js",
-    "build": "yarn clear-build-folder && yarn transpile && yarn fix-paths && yarn make-cli-executable",
+    "build": "yarn clear-build-folder && yarn transpile && yarn make-cli-executable",
     "dev": "yarn nodemon",
     "test": "jest"
   },
