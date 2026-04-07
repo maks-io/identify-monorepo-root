@@ -2,8 +2,7 @@ export const getHelp = (inclHeader = false) => {
   let help = "";
   if (inclHeader) {
     help += "Identify Monorepo Root\n";
-    help +=
-      "Find the root directory of any given monorepo (works with npm, yarn, pnpm, turbo, etc.)\n";
+    help += "Find the root directory of a monorepo from anywhere inside it.\n";
   }
   help += "\n";
   help += "Usage:\n";
@@ -11,7 +10,7 @@ export const getHelp = (inclHeader = false) => {
   help += "identify-monorepo-root\n";
 
   help += "\n";
-  help += "(you may run this command anywhere inside your given repo - you don't have to be in its root directory, otherwise this would defeat this library's purpose :)";
+  help += "You may run this command anywhere inside a repository. It prints the detected root path.";
 
   return help;
 };

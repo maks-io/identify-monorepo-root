@@ -1,73 +1,83 @@
-import * as path from "path";
-import { whoAmINow } from "who-am-i-now";
+import * as fs from "node:fs";
+import * as path from "node:path";
 
-type Trilean = "true" | "false" | "maybe";
+const LOCKFILE_NAMES = ["pnpm-lock.yaml", "yarn.lock", "package-lock.json"] as const;
+const MONOREPO_MANIFEST_KEYS = [
+  "packageManager",
+  "workspaces",
+  "private",
+  "pnpm",
+  "turbo",
+] as const;
 
-export const identifyMonorepoRoot = (): string | null => {
-  const who = whoAmINow();
+type PackageManifest = {
+  private?: boolean;
+  workspaces?: unknown;
+  packageManager?: unknown;
+  pnpm?: unknown;
+  turbo?: unknown;
+};
 
-  if (!who.isServerApp) {
-    throw new Error(
-      "Library 'identify-monorepo-root' can only be used server side."
-    );
-  }
+const isFilesystemRoot = (directory: string): boolean => {
+  const parentDirectory = path.dirname(directory);
+  return directory === parentDirectory;
+};
 
-  let fs;
-  try {
-    fs = require("fs");
-  } catch (e) {
-    // do nothing
-  }
+const readPackageManifest = (directory: string): PackageManifest | null => {
+  const packageJsonPath = path.join(directory, "package.json");
 
-  const isDirRoot = (currentDir: string): Trilean => {
-    const files = fs.readdirSync(currentDir);
-
-    // check for package manager lock files:
-    const lockFile = files.find(
-      (f) =>
-        f === "pnpm-lock.yaml" || f === "yarn.lock" || f === "package-lock.json"
-    );
-    if (lockFile) {
-      return "true";
-    }
-
-    // check for a package.json file with certain properties:
-    const packageJson = files.find((f) => f === "package.json");
-    if (packageJson) {
-      const packageJsonFile = fs.readFileSync(
-        path.resolve(currentDir, "package.json"),
-        "utf-8"
-      );
-      if (packageJsonFile.packageManager) {
-        return "true";
-      }
-      return "maybe";
-    }
-
-    return "false";
-  };
-
-  let isRoot: Trilean = "false";
-  let lastPossibleRootDir: string;
-  let currentDir = process.cwd() || __dirname;
-  while (true) {
-    isRoot = isDirRoot(currentDir);
-    if (isRoot === "maybe") {
-      lastPossibleRootDir = currentDir;
-    } else if (isRoot === "true") {
-      break;
-    }
-    if (currentDir === "/") {
-      break;
-    }
-    currentDir = path.resolve(currentDir, "..");
-  }
-
-  if (isRoot === "true") {
-    return currentDir;
-  } else if (lastPossibleRootDir) {
-    return lastPossibleRootDir;
-  } else {
+  if (!fs.existsSync(packageJsonPath)) {
     return null;
+  }
+
+  try {
+    return JSON.parse(fs.readFileSync(packageJsonPath, "utf8")) as PackageManifest;
+  } catch {
+    return null;
+  }
+};
+
+const hasLockfile = (directory: string): boolean =>
+  LOCKFILE_NAMES.some((lockfileName) => fs.existsSync(path.join(directory, lockfileName)));
+
+const looksLikeMonorepoRoot = (directory: string): boolean => {
+  if (hasLockfile(directory)) {
+    return true;
+  }
+
+  const manifest = readPackageManifest(directory);
+  if (!manifest) {
+    return false;
+  }
+
+  if (manifest.workspaces) {
+    return true;
+  }
+
+  if (manifest.packageManager || manifest.pnpm || manifest.turbo) {
+    return true;
+  }
+
+  return Boolean(manifest.private && MONOREPO_MANIFEST_KEYS.some((key) => key in manifest));
+};
+
+export const identifyMonorepoRoot = (startDirectory = process.cwd()): string | null => {
+  let currentDirectory = path.resolve(startDirectory);
+  let lastManifestDirectory: string | null = null;
+
+  while (true) {
+    if (looksLikeMonorepoRoot(currentDirectory)) {
+      return currentDirectory;
+    }
+
+    if (readPackageManifest(currentDirectory)) {
+      lastManifestDirectory = currentDirectory;
+    }
+
+    if (isFilesystemRoot(currentDirectory)) {
+      return lastManifestDirectory;
+    }
+
+    currentDirectory = path.dirname(currentDirectory);
   }
 };
